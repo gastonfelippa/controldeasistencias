@@ -1,14 +1,16 @@
 @extends('layouts.template')
 
 @section('content')
-<div class="content ml-2">
-    <h1>Listado de Alumnos</h1>
+<div class="content">
+    <h1 class="ml-2">Listado de Alumnos</h1>
         @if($message = Session::get('mensaje'))
             <script>
                 Swal.fire({
-                    title: "Good job!",
+                    title: "Buen trabajo!",
                     text: "{{$message}}",
-                    icon: "success"
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 2000
                 });
             </script>
         @endif
@@ -19,7 +21,7 @@
                 <div class="card-tools">
                     <a href="{{ url('/alumnos/create')}}" class="btn btn-primary">
                         <i class="bi bi-file-plus"></i>
-                        Agregar nuevo alumno
+                        Agregar Nuevo Alumno
                     </a>
                 </div>
                 {{-- <div class="card-tools">
@@ -72,7 +74,7 @@
                         </tr>
                         @endforeach
                     </tbody>
-                </table>  
+                </table>
             </div>
         </div>
     </div>        

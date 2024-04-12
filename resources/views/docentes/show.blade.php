@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="content">
-    <h1 class="ml-2">Datos del Alumno</h1>
+    <h1 class="ml-2">Datos del Docente</h1>
     <div class="col-md-12 col-sm-12">
         <div class="card card-outline card-primary">
             <div class="card-header">
@@ -15,25 +15,25 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Nombres y Apellidos</label>
-                                    <input name="nombre_apellido" value="{{ $alumno->nombre_apellido }}" type="text" class="form-control" disabled>
+                                    <input name="nombre_apellido" value="{{ $docente->nombre_apellido }}" type="text" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Email</label>
-                                    <input name="email" value="{{ $alumno->email }}" type="email" class="form-control" disabled>
+                                    <input name="email" value="{{ $docente->email }}" type="email" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Teléfono</label>
-                                    <input name="telefono" value="{{ $alumno->telefono }}" type="number" class="form-control" disabled>
+                                    <input name="telefono" value="{{ $docente->telefono }}" type="number" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Fecha de Nacimiento</label>
-                                    <input name="fecha_nacimiento" value="{{ $alumno->fecha_nacimiento }}" type="date" class="form-control" disabled>
+                                    <input name="fecha_nacimiento" value="{{ $docente->fecha_nacimiento }}" type="date" class="form-control" disabled>
                                 </div>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                                 <div class="form-group">
                                     <label for="">Género</label>
                                     <select name="genero" class="form-control" id="" disabled>
-                                        @if ($alumno->genero == 'MASCULINO' || $alumno->genero == 'masculino')
+                                        @if ($docente->genero == 'MASCULINO' || $docente->genero == 'masculino')
                                             <option value="MASCULINO">MASCULINO</option>
                                             <option value="FEMENINO">FEMENINO</option>                                                
                                         @else
@@ -56,13 +56,13 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Institución</label>
-                                    <input name="institucion" value="{{ $alumno->institucion }}" type="text" class="form-control" disabled>
+                                    <input name="institucion" value="{{ $docente->institucion }}" type="text" class="form-control" disabled>
                                 </div>
                             </div>                            
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Dirección</label>
-                                    <input name="direccion" value="{{ $alumno->direccion }}" type="text" class="form-control" disabled>
+                                    <input name="direccion" value="{{ $docente->direccion }}" type="text" class="form-control" disabled>
                                 </div>
                             </div>
                         </div>
@@ -72,14 +72,14 @@
                             <label for="">Fotografía</label>
                         </div>
                         <center>
-                            @if ($alumno->fotografia == '')
-                                @if ($alumno->genero == 'MASCULINO' || $alumno->genero == 'masculino')
+                            @if ($docente->fotografia == '')
+                                @if ($docente->genero == 'MASCULINO' || $docente->genero == 'masculino')
                                     <img src="{{ asset('images/avatar-hombre.jpg')}}" width="150px" alt="">
                                 @else
                                     <img src="{{ asset('images/avatar-mujer.jpg')}}" width="150px" alt="">                            
                                 @endif    
                             @else
-                                <img src="{{ asset('storage'.'/'.$alumno->fotografia)}}" width="150px" alt=""> 
+                                <img src="{{ asset('storage'.'/'.$docente->fotografia)}}" width="150px" alt=""> 
                             @endif                            
                         </center>           
                     </div>
@@ -87,7 +87,7 @@
                 <hr>
                 <div class="row">
                     <div class="col-md-3">
-                        <a href="{{ url('alumnos')}}" class="btn btn-secondary">Volver</a>
+                        <a href="{{ url('docentes')}}" class="btn btn-secondary">Volver</a>
                     </div>
                 </div>
             </div>

@@ -24,6 +24,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
   {{-- Sweetalerts2 --}}
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+  {{-- CKEditor para los text-area --}}
+  {{-- <script src="https://cdn.ckeditor.com/ckeditor5/41.3.0/classic/ckeditor.js"></script> --}}
 
 </head>
 <body class="hold-transition sidebar-mini">
@@ -54,7 +56,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="navbar-search-block">
           <form class="form-inline">
             <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              {{-- <input class="form-control form-control-navbar" type="search" placeholder="Buscar Alumnos" aria-label="Search"> --}}
+              <form action="{{ url('asistencias/search') }}" method="POST" class="d-flex">
+                @csrf
+                <div class="form-row col-sm-4">
+                    <input type="text" class="form-control" placeholder="Texto a buscar" name="search">{{-- value="{{$valorBuscado}}"> --}}
+                </div>
+                <div class="col-auto">
+                    <input type="submit" class="btn btn-primary" value="Buscar">
+                </div>
+            </form>
+              {{-- <form action="{{ url('asistencias/'.$i->id)}}" method="post">
+                @csrf
+                {{ method_field('DELETE') }}
+                <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
+              </form> --}}
+              
               <div class="input-group-append">
                 <button class="btn btn-navbar" type="submit">
                   <i class="fas fa-search"></i>
@@ -204,12 +221,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-
-          {{-- <li class="nav-item menu-open"> --}}
           <li class="nav-item">
-            <a href="#" class="nav-link active">              
-              {{-- <i class="nav-icon fas fa-th"></i> --}}
-              <i class="nav-icon bi bi-people"></i>
+            <a href="#" class="nav-link active">            
+              <i class="nav-icon bi bi-person-arms-up"></i>
               <p>
                 Alumnos
                 <i class="right fas fa-angle-left"></i>
@@ -231,23 +245,134 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link active">            
+              <i class="nav-icon bi bi-person-workspace"></i>
+              <p>
+                Docentes
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url('docentes/create')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Nuevo Docente</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('docentes')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Listado de Docentes</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link active">          
+              <i class="nav-icon bi bi-people"></i>
+              <p>
+                Usuarios
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url('usuarios/create')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Nuevo Usuario</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('usuarios')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Listado de Usuarios</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link active">              
+              {{-- <i class="nav-icon fas fa-th"></i> --}}
+              <i class="nav-icon bi bi-houses"></i>
+              <p>
+                Aulas
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url('aulas/create')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Nueva Aula</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('aulas')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Listado de Aulas</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link active">              
+              <i class="nav-icon bi bi-balloon"></i>
+              <p>
+                Niveles
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url('niveles/create')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Nuevo Nivel</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('niveles')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Listado de Niveles</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link active">              
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Asistencias
-                {{-- <i class="right fas fa-angle-left"></i> --}}
+                <i class="right fas fa-angle-left"></i>
               </p>
             </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url('asistencias')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Ingresos</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('niveles')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Egresos</p>
+                </a>
+              </li>
+            </ul>
           </li>
+          {{-- <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>Asistencias</p>
+            </a>
+          </li> --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();"
                 style="background-color: rgba(211, 16, 16, 0.925)">
-                {{-- <i class="nav-icon"> --}}
                  <i class="nav-icon bi bi-door-closed"></i>
-                {{-- </i> --}}
-                Cerrar Sesión
+                 <p>Cerrar Sesión</p>                
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf
@@ -263,7 +388,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <br>
-    <div class="content">
+    <div class="content ml-2">
       @yield('content')
     </div>
   </div>
@@ -312,70 +437,59 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
-{{-- <script src="{{ asset('plugins/sweetalert2/sweetalert2.all.min.js')}}"></script> --}}
-
-{{-- DataTables --}}
-<script>
-  $(function () {
-              $("#example1").DataTable({
-                  "pageLength": 10,
-                  "language": {
-                      "emptyTable": "No hay información",
-                      "info": "Mostrando _START_ a _END_ de _TOTAL_ Alumnos",
-                      "infoEmpty": "Mostrando 0 a 0 de 0 Alumnos",
-                      "infoFiltered": "(Filtrado de _MAX_ total Alumnos)",
-                      "infoPostFix": "",
-                      "thousands": ",",
-                      "lengthMenu": "Mostrar _MENU_ Alumnos",
-                      "loadingRecords": "Cargando...",
-                      "processing": "Procesando...",
-                      "search": "Buscador:",
-                      "zeroRecords": "Sin resultados encontrados",
-                      "paginate": {
-                          "first": "Primero",
-                          "last": "Ultimo",
-                          "next": "Siguiente",
-                          "previous": "Anterior"
-                      }
-                  },
-                  "responsive": true, "lengthChange": true, "autoWidth": false,
-                  buttons: [{
-                      extend: 'collection',
-                      text: 'Reportes',
-                      orientation: 'landscape',
+            {{-- DataTables --}}
+            <script>
+              $(function () {
+                  $("#example1").DataTable({
+                      "pageLength": 10,
+                      "language": {
+                          "emptyTable": "No hay información",
+                          "info": "Mostrando _START_ a _END_ de _TOTAL_ Registros",
+                          "infoEmpty": "Mostrando 0 a 0 de 0 Registros",
+                          "infoFiltered": "(Filtrado de _MAX_ total Registros)",
+                          "infoPostFix": "",
+                          "thousands": ",",
+                          "lengthMenu": "Mostrar _MENU_ Registros",
+                          "loadingRecords": "Cargando...",
+                          "processing": "Procesando...",
+                          "search": "Buscador:",
+                          "zeroRecords": "Sin resultados encontrados",
+                          "paginate": {
+                              "first": "Primero",
+                              "last": "Ultimo",
+                              "next": "Siguiente",
+                              "previous": "Anterior"
+                          }
+                      },
+                      "responsive": true, "lengthChange": true, "autoWidth": false,
                       buttons: [{
-                          text: 'Copiar',
-                          extend: 'copy',
-                        }, {
-                            extend: 'pdf'
-                        },{
-                            extend: 'csv'
-                        },{
-                            extend: 'excel'
-                        },{
-                            text: 'Imprimir',
-                            extend: 'print'
-                        }
-                      ]
-                  },
-                      {
-                          extend: 'colvis',
-                          text: 'Visor de columnas',
-                          collectionLayout: 'absolute' //'fixed three-column'
-                      }
-                  ],
-              }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-          });
-          </script> 
-{{-- <script>
-  $(function () {
-    $("#example1").DataTable({
-        "responsive": true, "lengthChange": true, "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-  });
-</script> --}}
-
+                          extend: 'collection',
+                          text: 'Reportes',
+                          orientation: 'landscape',
+                          buttons: [{
+                              text: 'Copiar',
+                              extend: 'copy',
+                              }, {
+                                  extend: 'pdf'
+                              },{
+                                  extend: 'csv'
+                              },{
+                                  extend: 'excel'
+                              },{
+                                  text: 'Imprimir',
+                                  extend: 'print'
+                              }
+                          ]
+                      },
+                          {
+                              extend: 'colvis',
+                              text: 'Visor de columnas',
+                              collectionLayout: 'absolute' //'fixed three-column'
+                          }
+                      ],
+                  }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+              });
+          </script>  
 </body>
 </html>
 

@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="content">
-    <h1 class="ml-2">Agregar Alumno</h1>
+    <h1 class="ml-2">Editar Docente</h1>
     <div class="col-md-12 col-sm-12">
-        <div class="card card-outline card-primary">
+        <div class="card card-outline card-success">
             <div class="card-header">
                 <h3 class="card-title"><b>Completar datos</b></h3>
                 @foreach ($errors->all() as $error)
@@ -14,64 +14,68 @@
                 @endforeach
             </div>
             <div class="card-body" style="display: block;">
-                <form action="{{ url('/alumnos')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{ url('/docentes', $docente->id)}}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    {{ method_field('PATCH')}}
                     <div class="row">
                         <div class="col-md-9">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Nombres y Apellidos</label><b>*</b>
-                                        <input name="nombre_apellido" type="text" value="{{ old('nombre_apellido')}}" 
-                                            class="form-control" required autofocus autocomplete="off">
-                                        {{-- @error('nombre_apellido')
-                                            <small style="color: red;">* Este campo no puede ser nulo</small>                                    
-                                        @enderror --}}
+                                        <input name="nombre_apellido" type="text" value="{{ $docente->nombre_apellido }}" 
+                                            class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Email</label><b>*</b>
-                                        <input name="email" type="email" value="{{ old('email')}}" 
+                                        <input name="email" type="email" value="{{ $docente->email }}" 
                                             class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Teléfono</label><b>*</b>
-                                        <input name="telefono" type="number" value="{{ old('telefono')}}" 
+                                        <input name="telefono" type="number" value="{{ $docente->telefono }}" 
                                             class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Fecha de Nacimiento</label><b>*</b>
-                                        <input name="fecha_nacimiento" type="date" value="{{ old('fecha_nacimiento')}}" 
+                                        <input name="fecha_nacimiento" type="date" value="{{ $docente->fecha_nacimiento }}" 
                                             class="form-control" required>
                                     </div>
                                 </div>
-                            </div>                        
+                            </div>
+                        
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Género</label>
-                                        <select name="genero" class="form-control" id="">                                            
-                                            <option value="FEMENINO" {{ old('genero') == 'FEMENINO' ? 'selected' : '' }}>FEMENINO</option>
-                                            <option value="MASCULINO" {{ old('genero') == 'MASCULINO' ? 'selected' : '' }}>MASCULINO</option>                                      
+                                        <select name="genero" class="form-control" id="">
+                                            @if ($docente->genero == 'MASCULINO' || $docente->genero == 'masculino')
+                                                <option value="MASCULINO">MASCULINO</option>
+                                                <option value="FEMENINO">FEMENINO</option>                                                
+                                            @else
+                                                <option value="FEMENINO">FEMENINO</option>
+                                                <option value="MASCULINO">MASCULINO</option>
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Institución</label><b>*</b>
-                                        <input name="institucion" type="text" value="{{ old('institucion')}}" 
+                                        <input name="institucion" type="text" value="{{ $docente->institucion }}" 
                                             class="form-control" required>
                                     </div>
                                 </div>                            
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Dirección</label><b>*</b>
-                                        <input name="direccion" type="text" value="{{ old('direccion')}}" 
+                                        <input name="direccion" type="text" value="{{ $docente->direccion }}" 
                                             class="form-control" >
                                     </div>
                                 </div>
@@ -82,8 +86,19 @@
                                 <label for="">Fotografía</label>
                                 <input name="fotografia" type="file" id="file" class="form-control">
                             </div>
-                            <br>
-                            <center><output id="list"></output></center>
+                            <center>
+                                <output id="list">
+                                    @if ($docente->fotografia == '')
+                                    @if ($docente->genero == 'MASCULINO' || $docente->genero == 'masculino')
+                                            <img src="{{ asset('images/avatar-hombre.jpg')}}" width="150px" alt="">
+                                        @else
+                                            <img src="{{ asset('images/avatar-mujer.jpg')}}" width="150px" alt="">                            
+                                        @endif    
+                                    @else
+                                        <img src="{{ asset('storage'.'/'.$docente->fotografia)}}" width="150px" alt=""> 
+                                    @endif 
+                                </output>
+                            </center>
                             <script>
                                 function archivo(evt){
                                     var files = evt.target.files;
@@ -111,8 +126,8 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-3">
-                            <a href="{{ url('alumnos')}}" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-primary">Guardar registro</button>
+                            <a href="{{ url('docentes')}}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-success">Actualizar registro</button>
                         </div>
                     </div>
                 </form>

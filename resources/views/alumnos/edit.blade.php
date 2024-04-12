@@ -1,8 +1,8 @@
 @extends('layouts.template')
 
 @section('content')
-<div class="content ml-2">
-    <h1>Editar Alumnos</h1>
+<div class="content">
+    <h1 class="ml-2">Editar Alumno</h1>
     <div class="col-md-12 col-sm-12">
         <div class="card card-outline card-success">
             <div class="card-header">

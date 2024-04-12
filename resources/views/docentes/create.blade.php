@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="content">
-    <h1 class="ml-2">Agregar Alumno</h1>
+    <h1 class="ml-2">Agregar Docente</h1>
     <div class="col-md-12 col-sm-12">
         <div class="card card-outline card-primary">
             <div class="card-header">
@@ -14,7 +14,7 @@
                 @endforeach
             </div>
             <div class="card-body" style="display: block;">
-                <form action="{{ url('/alumnos')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{ url('/docentes')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-9">
@@ -33,31 +33,32 @@
                                     <div class="form-group">
                                         <label for="">Email</label><b>*</b>
                                         <input name="email" type="email" value="{{ old('email')}}" 
-                                            class="form-control" required>
+                                            class="form-control" required autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Teléfono</label><b>*</b>
                                         <input name="telefono" type="number" value="{{ old('telefono')}}" 
-                                            class="form-control" required>
+                                            class="form-control" required autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Fecha de Nacimiento</label><b>*</b>
                                         <input name="fecha_nacimiento" type="date" value="{{ old('fecha_nacimiento')}}" 
-                                            class="form-control" required>
+                                            class="form-control" required autocomplete="off">
                                     </div>
                                 </div>
-                            </div>                        
+                            </div>
+                        
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Género</label>
-                                        <select name="genero" class="form-control" id="">                                            
-                                            <option value="FEMENINO" {{ old('genero') == 'FEMENINO' ? 'selected' : '' }}>FEMENINO</option>
-                                            <option value="MASCULINO" {{ old('genero') == 'MASCULINO' ? 'selected' : '' }}>MASCULINO</option>                                      
+                                        <select name="genero" class="form-control" id="">
+                                            <option value="FEMENINO">FEMENINO</option>
+                                            <option value="MASCULINO">MASCULINO</option>
                                         </select>
                                     </div>
                                 </div>
@@ -65,14 +66,14 @@
                                     <div class="form-group">
                                         <label for="">Institución</label><b>*</b>
                                         <input name="institucion" type="text" value="{{ old('institucion')}}" 
-                                            class="form-control" required>
+                                            class="form-control" required autocomplete="off">
                                     </div>
                                 </div>                            
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Dirección</label><b>*</b>
                                         <input name="direccion" type="text" value="{{ old('direccion')}}" 
-                                            class="form-control" >
+                                            class="form-control" autocomplete="off">
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +112,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-3">
-                            <a href="{{ url('alumnos')}}" class="btn btn-secondary">Cancelar</a>
+                            <a href="{{ url('docentes')}}" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-primary">Guardar registro</button>
                         </div>
                     </div>
