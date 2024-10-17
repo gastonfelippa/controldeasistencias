@@ -3,8 +3,9 @@
 @section('content')
 <div class="content">
     <h1 class="ml-2">Editar Alumno</h1>
+    @include('common.messages')    {{--  mensages de session  --}}
     <div class="col-md-12 col-sm-12">
-        <div class="card card-outline card-success">
+        <div class="card card-outline card-primary">
             <div class="card-header">
                 <h3 class="card-title"><b>Completar datos</b></h3>
                 @foreach ($errors->all() as $error)
@@ -12,128 +13,248 @@
                         <li>{{ $error }}</li>
                     </div>
                 @endforeach
-                {{-- <div class="card-tools">
-                    <a href="{{ url('/alumnos/create')}}" class="btn btn-primary">
-                        <i class="bi bi-file-plus"></i>
-                        Agregar nuevo alumno
-                    </a>
-                </div> --}}
             </div>
             <div class="card-body" style="display: block;">
-                <form action="{{ url('/alumnos', $alumno->id)}}" method="POST" enctype="multipart/form-data">
+                <form id="formId" action="{{ url('/alumnos', $alumno->id)}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     {{ method_field('PATCH')}}
+                    {{-- alumno --}}
                     <div class="row">
-                        <div class="col-md-9">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Nombres y Apellidos</label><b>*</b>
-                                        <input name="nombre_apellido" type="text" value="{{ $alumno->nombre_apellido }}" 
-                                            class="form-control" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Email</label><b>*</b>
-                                        <input name="email" type="email" value="{{ $alumno->email }}" 
-                                            class="form-control" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Teléfono</label><b>*</b>
-                                        <input name="telefono" type="number" value="{{ $alumno->telefono }}" 
-                                            class="form-control" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Fecha de Nacimiento</label><b>*</b>
-                                        <input name="fecha_nacimiento" type="date" value="{{ $alumno->fecha_nacimiento }}" 
-                                            class="form-control" required>
-                                    </div>
-                                </div>
-                            </div>
-                        
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Género</label>
-                                        <select name="genero" class="form-control" id="">
-                                            @if ($alumno->genero == 'MASCULINO' || $alumno->genero == 'masculino')
-                                                <option value="MASCULINO">MASCULINO</option>
-                                                <option value="FEMENINO">FEMENINO</option>                                                
-                                            @else
-                                                <option value="FEMENINO">FEMENINO</option>
-                                                <option value="MASCULINO">MASCULINO</option>
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Institución</label><b>*</b>
-                                        <input name="institucion" type="text" value="{{ $alumno->institucion }}" 
-                                            class="form-control" required>
-                                    </div>
-                                </div>                            
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="">Dirección</label><b>*</b>
-                                        <input name="direccion" type="text" value="{{ $alumno->direccion }}" 
-                                            class="form-control" >
-                                    </div>
-                                </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Nombre Alumno</label><b>*</b>
+                                <input value="{{ $alumno->nombre_alumno }}"  name="nombre_alumno" type="text"
+                                    placeholder="Nombre" class="form-control text-capitalize" 
+                                    required autofocus autocomplete="off">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Fotografía</label>
-                                <input name="fotografia" type="file" id="file" class="form-control">
+                                <label for="">Apellido Alumno</label><b>*</b>
+                                <input value="{{ $alumno->apellido_alumno }}" name="apellido_alumno" type="text"
+                                    placeholder="Apellido" class="form-control text-capitalize" 
+                                    required autofocus autocomplete="off">
                             </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">DNI Alumno</label><b>*</b>
+                                <input value="{{ $alumno->dni }}" name="dni" type="number" placeholder="DNI Alumno"
+                                    class="form-control" 
+                                    required autofocus autocomplete="off" maxlength="8">
+                            </div>
+                        </div>
+                        <div class="col-md-2"> 
+                            <div class="form-group">
+                                <label for="">Fecha de Nacimiento</label><b>*</b>
+                                <input value="{{ $alumno->fecha_nacimiento }}" name="fecha_nacimiento" type="date" 
+                                    class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Género</label><b>*</b>
+                                <select name="genero" class="form-control" id="">
+                                    <option value="1" {{ $alumno->genero == '1' ? 'selected' : '' }}>Femenino</option>
+                                    <option value="2" {{ $alumno->genero == '2' ? 'selected' : '' }}>Masculino</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {{-- dirección --}}
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="">Dirección</label><b>*</b>
+                                        <input value="{{ $alumno->direccion }}" name="direccion" type="text"
+                                            placeholder="Calle/N°/Piso/Dpto/Localidad" class="form-control text-capitalize">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">                                    
+                                    <div class="form-group">
+                                        <label for="fecha_ingreso">Fecha Ingreso</label><b>*</b>
+                                        <input value="{{ $alumno->fecha_ingreso }}" name="fecha_ingreso" type="date"
+                                        class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">   
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="salaId">Sala</label><b>*</b>
+                                        <select name="salaId" class="form-control">
+                                            <option value="Elegir">Elegir Sala</option>
+                                            @foreach ($salas as $i)
+                                                <option value="{{ $i->id }}" {{ $alumno->sala_id == $i->id ? 'selected' : '' }}>{{ $i->descripcion }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="planId">Plan</label><b>*</b>
+                                        <select name="planId" class="form-control">
+                                            <option value="Elegir">Elegir Plan</option>
+                                            @foreach ($planes as $i)
+                                                <option value="{{ $i->id }}" {{ $alumno->plan_id == $i->id ? 'selected' : '' }}>{{ $i->descripcion }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>                        
+                            </div>    
+                        </div>
+                        {{-- foto --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Fotografía</label>
+                                <input name="foto" type="file" id="foto" class="form-control">
+                            </div>
+                            <br>
                             <center>
-                                <output id="list">
-                                    @if ($alumno->fotografia == '')
-                                    @if ($alumno->genero == 'MASCULINO' || $alumno->genero == 'masculino')
-                                            <img src="{{ asset('images/avatar-hombre.jpg')}}" width="150px" alt="">
-                                        @else
-                                            <img src="{{ asset('images/avatar-mujer.jpg')}}" width="150px" alt="">                            
+                                <output id="list"></output>
+                                <output id="image_back">                                
+                                    @if ($alumno->foto == '')
+                                        @if ($alumno->genero == '1') <img class="rounded-circle" src="{{ asset('images/avatar-niña.jpg')}}" width="150px" alt="">                            
+                                        @else <img class="rounded-circle" src="{{ asset('images/avatar-niño.jpg')}}" width="150px" alt="">
                                         @endif    
-                                    @else
-                                        <img src="{{ asset('storage'.'/'.$alumno->fotografia)}}" width="150px" alt=""> 
+                                    @else <img class="rounded-circle" src="{{ route('alumno.imagen', $alumno->foto) }}" width="150px">
                                     @endif 
                                 </output>
-                            </center>
-                            <script>
-                                function archivo(evt){
-                                    var files = evt.target.files;
-                                    //obtenemos la imagen del campo "file".
-                                    for (var i=0, f; f = files[i]; i++){
-                                        //solo admitimos imagenes.
-                                        if (!f.type.match('image.*')){
-                                            continue;
-                                        }
-                                        var reader = new FileReader();
-                                        reader.onload = (function (theFile){
-                                            return function (e){
-                                                //insertamos la imagen
-                                                document.getElementById("list").innerHTML = ['<img class="thumb thumbnail" src="',e.target.result,'"width="50%" title="', escape(theFile.name),'"/>'].join('');
-                                            };
-                                        }) (f);
-                                        reader.readAsDataURL(f);
-                                    }
-
-                                }
-                                document.getElementById('file').addEventListener('change',archivo, false);
-                            </script>
+                                <output id="loadingMessage" style="display: none;">
+                                    <img height="100px" src="{{ asset('images/spinners/spinner.gif') }}" alt="Cargando...">
+                                </output>
+                            </center> 
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="">Observaciones</label>
+                                <textarea name="comentario" rows="2" class="form-control" 
+                                    autocomplete="off">{{ $alumno->comentario }}</textarea>
+                            </div>
+                        </div>
+                    </div>                 
+                    <hr>
+                    {{-- mamá --}}
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="nombre_mama">Nombre Mamá</label>
+                                <input value="{{ $alumno->nombre_mama }}" name="nombre_mama" type="text"
+                                    id="nombre_mama" placeholder="Nombre"
+                                    class="form-control text-capitalize" autofocus autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="apellido_mama">Apellido Mamá</label>
+                                <input value="{{ $alumno->apellido_mama }}" name="apellido_mama" type="text"
+                                    id="apellido_mama" placeholder="Apellido"
+                                    class="form-control text-capitalize" autofocus autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="tel_mama">Teléfono Mamá</label>
+                                <input value="{{ $alumno->tel_mama }}" name="tel_mama" type="number"
+                                    id="tel_mama" class="form-control" placeholder="8888-888888">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="switchMama">Asignar a Mamá como Tutora</label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="switchMama">
+                                    <label class="custom-control-label" for="switchMama"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    {{-- papá --}}
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="nombre_papa">Nombre Papá</label>
+                                <input value="{{ $alumno->nombre_papa }}" name="nombre_papa" type="text"
+                                    id="nombre_papa" placeholder="Nombre"
+                                    class="form-control text-capitalize" autofocus autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="apellido_papa">Apellido Papá</label>
+                                <input value="{{ $alumno->apellido_papa }}" name="apellido_papa" type="text"
+                                    id="apellido_papa" placeholder="Apellido"
+                                    class="form-control text-capitalize" autofocus autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="tel_mama">Teléfono Papá</label>
+                                <input value="{{ $alumno->tel_papa }}" name="tel_papa" type="number"
+                                    id="tel_papa" class="form-control" placeholder="8888-888888">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="switchPapa">Asignar a Papá como Tutor</label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="switchPapa">
+                                    <label class="custom-control-label" for="switchPapa"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    {{-- tutor --}}
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="nombre_tutor">Nombre Tutor/a</label><b>*</b>
+                                <input value="{{ $alumno->nombre_tutor }}" id="nombre_tutor" type="text"
+                                    id="tutor_nombre_id" placeholder="Nombre" name="nombre_tutor"
+                                    onchange="disableCheckbox()"
+                                    class="form-control text-capitalize" required autofocus autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="apellido_tutor">Apellido Tutor/a</label><b>*</b>
+                                <input value="{{ $alumno->apellido_tutor }}" id="apellido_tutor" type="text"
+                                    id="tutor_apellido_id" placeholder="Apellido" name="apellido_tutor"
+                                    onchange="disableCheckbox()"
+                                    class="form-control text-capitalize" required autofocus autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="tel_tutor">Teléfono Tutor/a</label><b>*</b>
+                                <input value="{{ $alumno->tel_tutor }}" id="tel_tutor" type="number"
+                                    id="tel_tutor" class="form-control" name="tel_tutor"
+                                    placeholder="8888-888888" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="email_tutor">Email Tutor/a</label><b>*</b>
+                                <input value="{{ $alumno->email_tutor }}" id="email_tutor" type="email"
+                                    id="tel_tutor" class="form-control" name="email_tutor"
+                                    placeholder="algo@mail..." required>
+                            </div>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col-md-3">
                             <a href="{{ url('alumnos')}}" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-success">Actualizar registro</button>
+                            <button id="boton" type="submit" class="btn btn-primary">Actualizar registro</button>
+                        </div>
+                        <div class="col-md-3" id="spinner" style="display: none;">
+                            <img height="100px" src="{{ asset('images/spinners/spinner.gif') }}" alt="Cargando..." />
                         </div>
                     </div>
                 </form>
@@ -141,4 +262,96 @@
         </div>
     </div>        
 </div>
+
+<script>
+    var switchMama = document.getElementById('switchMama');
+    var switchPapa = document.getElementById('switchPapa');
+    var image = document.getElementById('image');
+
+    switchMama.addEventListener("change", validaCheckboxM, false);
+    switchPapa.addEventListener("change", validaCheckboxP, false);
+    //image.addEventListener("change", fileChoosen, false);
+
+    function validaCheckboxM() {
+        var checkedM = switchMama.checked;
+        if (checkedM) {
+            $('#nombre_tutor').val($('#nombre_mama').val())
+            $('#apellido_tutor').val($('#apellido_mama').val())
+            $('#tel_tutor').val($('#tel_mama').val())
+            switchPapa.checked = false
+        } else {
+            $('#nombre_tutor').val('')
+            $('#apellido_tutor').val('')
+            $('#tel_tutor').val('')
+        }
+    }
+
+    function validaCheckboxP() {
+        var checkedP = switchPapa.checked;
+        if (checkedP) {
+            $('#nombre_tutor').val($('#nombre_papa').val())
+            $('#apellido_tutor').val($('#apellido_papa').val())
+            $('#tel_tutor').val($('#tel_papa').val())
+            switchMama.checked = false
+        } else {
+            $('#nombre_tutor').val('')
+            $('#apellido_tutor').val('')
+            $('#tel_tutor').val('')
+        }
+    }
+
+    function disableCheckbox() {
+        switchMama.checked = false;
+        switchPapa.checked = false;
+    }
+
+    document.getElementById('formId').addEventListener('submit', function() {
+        // Mostrar el mensaje de carga
+        document.getElementById('spinner').style.display = 'block';
+
+        // Deshabilitar el botón para evitar múltiples envíos
+        var boton = document.getElementById('boton');
+        boton.disabled = true;
+    });
+
+    function archivo(evt){
+        var files = evt.target.files;
+        const image = document.getElementById('list');
+        const image_back = document.getElementById('image_back');
+        const loadingMessage = document.getElementById('loadingMessage');
+        var boton = document.getElementById('boton');
+        loadingMessage.style.display = 'block';
+        boton.disabled = true;
+        image.style.display ='none';
+        image_back.style.display ='block';
+        //obtenemos la imagen del campo "file".
+        if (this.files.length) {
+            for (var i=0, f; f = files[i]; i++){
+                //solo admitimos imagenes.
+                if (!f.type.match('image.*')){
+                    continue;
+                }
+                var reader = new FileReader();
+                reader.onload = (function (theFile){
+                    return function (e){
+                        loadingMessage.style.display = 'none';
+                        image.style.display = 'block';
+                        image_back.style.display ='none';
+                        boton.disabled = false;
+                        //insertamos la imagen
+                        document.getElementById("list").innerHTML = ['<img class="thumb thumbnail rounded-circle" src="',e.target.result,'"width="50%" title="', escape(theFile.name),'"/>'].join('');
+                    };
+                }) (f);
+                reader.readAsDataURL(f);
+            }
+        } else {
+            loadingMessage.style.display = 'none';
+            image.style.display = 'none';
+            image_back.style.display ='block';
+            boton.disabled = false;
+        }
+    }
+    document.getElementById('foto').addEventListener('change',archivo, false);
+</script>
 @endsection
+

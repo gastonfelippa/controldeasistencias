@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\User;
 
 use App\Models\Alumno;
 use App\Models\Docente;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -13,9 +14,12 @@ class AdminController extends Controller
     {
         $alumnos = Alumno::count();
         $docentes = Docente::count();
+        $usuarios = User::count();
+        
         return view('index', [
             'alumnos'  => $alumnos,
-            'docentes' => $docentes
+            'docentes' => $docentes,
+            'usuarios' => $usuarios
         ]);
     }
 }

@@ -16,18 +16,16 @@ class CreateDocentesTable extends Migration
         Schema::create('docentes', function (Blueprint $table) {
             $table->id();
 
-            $table->string('nombre_apellido');
+            $table->string('nombre');
+            $table->string('apellido');
             $table->string('direccion');
             $table->string('telefono');
             $table->string('fecha_nacimiento');
-            $table->string('genero');
+            $table->enum('genero',[1,2]);  //1 femenino - 2 masculino
             $table->string('email')->unique();
-            $table->string('estado');
-            $table->string('institucion');
-            $table->text('fotografia')->nullable();
+            $table->enum('estado',[1,0])->default(1);  //1 activo - 0 inactivo   
+            $table->text('foto')->nullable();
             $table->string('fecha_ingreso');
-            // $table->unsignedBigInteger('institucion_id');
-            // $table->foreign('institucion_id')->references('id')->on('institucion');
             
             $table->timestamps();
         });

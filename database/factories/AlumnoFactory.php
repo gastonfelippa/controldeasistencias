@@ -20,10 +20,10 @@ class AlumnoFactory extends Factory
             'direccion' => $this->faker->streetAddress(),
             'telefono' => $this->faker->phoneNumber(),
             'fecha_nacimiento' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
-            'estado' => '1',
+            'estado' => '0',
             'genero' => $this->faker->randomElement(['FEMENINO', 'MASCULINO']),
             'email' => $this->faker->unique()->safeEmail(),
-            'institucion' => 'Mi jardincito',
+            'nivel_id' => 1,
             'fecha_ingreso' => $this->faker->date($format = 'Y-m-d') 
         ];
     }

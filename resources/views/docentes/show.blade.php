@@ -14,57 +14,67 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Nombres y Apellidos</label>
-                                    <input name="nombre_apellido" value="{{ $docente->nombre_apellido }}" type="text" class="form-control" disabled>
+                                    <label for="">Nombre</label>
+                                    <input value="{{ $docente->nombre }}" 
+                                        type="text" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Email</label>
-                                    <input name="email" value="{{ $docente->email }}" type="email" class="form-control" disabled>
+                                    <label for="">Apellido</label>
+                                    <input value="{{ $docente->apellido }}" 
+                                        type="text" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Domicilio</label>
+                                    <input value="{{ $docente->direccion }}" type="text" class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Fecha de Nacimiento</label>
+                                    <input value="{{ $docente->fecha_nacimiento }}" type="date" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Teléfono</label>
-                                    <input name="telefono" value="{{ $docente->telefono }}" type="number" class="form-control" disabled>
+                                    <input value="{{ $docente->telefono }}" type="number" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Fecha de Nacimiento</label>
-                                    <input name="fecha_nacimiento" value="{{ $docente->fecha_nacimiento }}" type="date" class="form-control" disabled>
+                                    <label for="">Email</label>
+                                    <input value="{{ $docente->email }}" type="email" class="form-control" disabled>
                                 </div>
                             </div>
-                        </div>
-                    
+                           <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Género</label>
+                                    <input value="{{ $docente->genero == 1 ? 'Femenino' : 'Masculino' }}"
+                                     type="text" class="form-control" disabled>
+                                </div>
+                            </div> 
+                        </div>                    
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Género</label>
-                                    <select name="genero" class="form-control" id="" disabled>
-                                        @if ($docente->genero == 'MASCULINO' || $docente->genero == 'masculino')
-                                            <option value="MASCULINO">MASCULINO</option>
-                                            <option value="FEMENINO">FEMENINO</option>                                                
-                                        @else
-                                            <option value="FEMENINO">FEMENINO</option>
-                                            <option value="MASCULINO">MASCULINO</option>
-                                        @endif
-                                    </select>
+                                    <label for="">Fecha de Ingreso</label>
+                                    <input value="{{ $docente->fecha_ingreso }}" type="date" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Institución</label>
-                                    <input name="institucion" value="{{ $docente->institucion }}" type="text" class="form-control" disabled>
+                                    <label for="">Estado</label>
+                                    <input value="{{ $docente->estado == 1 ? 'Activo' : 'Inactivo' }}"
+                                     type="text" class="form-control" disabled>
                                 </div>
-                            </div>                            
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Dirección</label>
-                                    <input name="direccion" value="{{ $docente->direccion }}" type="text" class="form-control" disabled>
-                                </div>
-                            </div>
+                            </div>                        
+                        
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -72,14 +82,12 @@
                             <label for="">Fotografía</label>
                         </div>
                         <center>
-                            @if ($docente->fotografia == '')
-                                @if ($docente->genero == 'MASCULINO' || $docente->genero == 'masculino')
-                                    <img src="{{ asset('images/avatar-hombre.jpg')}}" width="150px" alt="">
-                                @else
-                                    <img src="{{ asset('images/avatar-mujer.jpg')}}" width="150px" alt="">                            
-                                @endif    
+                            @if ($docente->foto == '')
+                                @if ($docente->genero == '1') <img class="rounded-circle" src="{{ asset('images/avatar-mujer.jpg')}}" width="150px" alt="">                            
+                                @else <img class="rounded-circle" src="{{ asset('images/avatar-hombre.jpg')}}" width="150px" alt="">
+                                @endif   
                             @else
-                                <img src="{{ asset('storage'.'/'.$docente->fotografia)}}" width="150px" alt=""> 
+                                <img class="rounded-circle" src="{{ route('docente.imagen', $docente->foto) }}" width="150px">
                             @endif                            
                         </center>           
                     </div>

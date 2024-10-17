@@ -2,142 +2,158 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
+use App\Models\Docente;
+
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-
-use App\Models\Docente;
-use Carbon\Carbon;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class DocenteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public $genero;
+
+    public function __construct()
+    {
+        $this->middleware('can:Docentes_index')->only('index');
+        $this->middleware('can:Docentes_create')->only('create', 'store');
+        $this->middleware('can:Docentes_edit')->only('edit', 'update');
+        $this->middleware('can:Docentes_destroy')->only('destroy');
+    }
+
     public function index()
     {
         $docentes = Docente::all()->sortByDesc('id'); 
         return view('docentes.index', ['docentes' => $docentes]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('docentes.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'nombre_apellido'  => 'required',
+            'nombre'           => 'required',
+            'apellido'         => 'required',
             'direccion'        => 'required',
             'telefono'         => 'required',
             'fecha_nacimiento' => 'required',
-            'email'            => 'required',
-            'institucion'      => 'required'
+            'email'            => 'required'
         ]);
 
         $docente = new Docente();
 
-        $docente->nombre_apellido  = ucwords($request->nombre_apellido);
+        $docente->nombre           = ucwords($request->nombre);
+        $docente->apellido         = ucwords($request->apellido);
         $docente->direccion        = ucwords($request->direccion);
         $docente->telefono         = $request->telefono;
         $docente->fecha_nacimiento = $request->fecha_nacimiento;
         $docente->genero           = $request->genero;
-        $docente->estado           = '1';
-        $docente->institucion      = $request->institucion;
+        $docente->estado           = 1;
         $docente->email            = strtolower($request->email);
-        if ($request->hasFile('fotografia')) {
-            $docente->fotografia = $request->file('fotografia')->store('fotos_alumnos','public');
-        }
-        $docente->fecha_ingreso = Carbon::now();
+        $docente->fecha_ingreso    = Carbon::now()->format('Y-m-d');
+
+        if ($request->file('foto')) {
+            $image = $request->file('foto');
+            $nombreImagen = time() . '_' . $request->file('foto')->getClientOriginalName();
+            // Redimensionar la imagen
+            $resizedImage = Image::make($image)->resize(400, 400, function ($constraint) {
+                    $constraint->aspectRatio(); // Mantener la relación de aspecto
+                })->encode('jpg', 75); // Opcional: Cambiar a formato jpg y reducir calidad al 75%
+            $request->validate([
+                'foto' => 'image|max:2048', // 2048 KB = 2 MB
+            ]);
+            // Guardar la imagen en la carpeta privada (storage/app/private/docentes)
+            if($resizedImage){
+                $moved = Storage::disk('local')->put('private/docentes/' . $nombreImagen, $resizedImage);
+                if ($moved) $docente->foto = $nombreImagen;
+            }
+        }        
 
         $docente->save();
-        return redirect()->route('docentes.index')->with('mensaje', 'El Docente se grabó exitosamente!!');
+        return redirect()->route('docentes.index')->with('mensaje_ok', 'El Docente se grabó exitosamente!!');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Docente  $docente
-     * @return \Illuminate\Http\Response
-     */
     public function show(Docente $docente)
     {
         $docente = Docente::findOrFail($docente->id);
-        return view('docentes.show', ['docente' => $docente]);
+        $this->genero = $docente->genero;
+
+        return view('docentes.show', compact('docente'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Docente  $docente
-     * @return \Illuminate\Http\Response
-     */
+    public function mostrarImagen($filename)
+    {
+        $path = storage_path('app/private/docentes/' . $filename);
+
+        if (!\File::exists($path)) abort(404); // Si no existe, retorna un error 404
+                
+        return response()->file($path); // Devuelve el archivo como respuesta      
+    }
+
     public function edit(Docente $docente)
     {
         $docente = Docente::findOrFail($docente->id);
         return view('docentes.edit', ['docente' => $docente]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Docente  $docente
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Docente $docente)
     {
         $request->validate([
-            'nombre_apellido'  => 'required',
+            'nombre'           => 'required',
+            'apellido'         => 'required',
             'direccion'        => 'required',
             'telefono'         => 'required',
             'fecha_nacimiento' => 'required',
-            'email'            => ['required','email',Rule::unique('docentes')->ignore($docente->id),],
-            'institucion'      => 'required'
+            'fecha_ingreso'    => 'required',
+            'email'            => ['required','email',Rule::unique('docentes')->ignore($docente->id),]
         ]);
 
         $docente = Docente::find($docente->id);
 
-        $docente->nombre_apellido  = ucwords($request->nombre_apellido);
+        $docente->nombre           = ucwords($request->nombre);
+        $docente->apellido         = ucwords($request->apellido);
         $docente->direccion        = ucwords($request->direccion);
         $docente->telefono         = $request->telefono;
         $docente->fecha_nacimiento = $request->fecha_nacimiento;
         $docente->genero           = $request->genero;
-        $docente->institucion      = $request->institucion;
+        $docente->estado           = $request->estado;
         $docente->email            = strtolower($request->email);
-        if ($request->hasFile('fotografia')) {
-            Storage::delete('public/'.$docente->fotografia);
-            $docente->fotografia = $request->file('fotografia')->store('fotos_alumnos','public');
+        $docente->fecha_ingreso    = $request->fecha_ingreso;
+
+        if ($request->file('foto')) {
+            if (Storage::disk('local')->exists('private/docentes/' . $docente->foto)) {
+                // Eliminar la imagen anterior
+                Storage::disk('local')->delete('private/docentes/' . $docente->foto);
+            }
+            $image = $request->file('foto');
+            $nombreImagen = time() . '_' . $request->file('foto')->getClientOriginalName();
+            // Redimensionar la imagen
+            $resizedImage = Image::make($image)->resize(400, 400, function ($constraint) {
+                    $constraint->aspectRatio(); // Mantener la relación de aspecto
+                })->encode('jpg', 75); // Opcional: Cambiar a formato jpg y reducir calidad al 75%
+          
+            $request->validate([
+                'foto' => 'image|max:2048', // 2048 KB = 2 MB
+            ]);
+            // Guardar la imagen en la carpeta privada (storage/app/private)
+            if($resizedImage){
+                $moved = Storage::disk('local')->put('private/docentes/' . $nombreImagen, $resizedImage);
+                if ($moved) $docente->foto = $nombreImagen;
+            }
         }
-        $docente->fecha_ingreso = Carbon::now();
 
         $docente->save();
-        return redirect()->route('docentes.index')->with('mensaje', 'El Docente se modificó exitosamente!!');
+        return redirect()->route('docentes.index')->with('mensaje_ok', 'El Docente se modificó exitosamente!!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Docente  $docente
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Docente $docente)
     {
         Docente::destroy($docente->id);
-        return redirect()->route('docentes.index')->with('mensaje', 'El Docente se eliminó exitosamente!!');
+        return redirect()->route('docentes.index')->with('mensaje_ok', 'El Docente se eliminó exitosamente!!');
     }
 }

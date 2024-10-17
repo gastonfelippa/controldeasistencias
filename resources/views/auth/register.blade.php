@@ -24,6 +24,16 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <input id="nombre_institucion" type="text" class="form-control text-uppercase @error('nombreComercio') is-invalid @enderror" name="nombre_institucion" value="{{ old('nombre_institucion') }}" required autocomplete="nombre_institucion" autofocus placeholder="NOMBRE DE LA INSTITUCIÓN">
+                                @error('nombre_institucion')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
 
                         <div class="row mb-3">
                             <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>

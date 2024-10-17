@@ -38,4 +38,11 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    /**
+     * funciones agregadas
+     */
+    public function username()
+    {
+        return 'username'; //ahora utilizaremos la columna username de la tabla users
+    }
 }

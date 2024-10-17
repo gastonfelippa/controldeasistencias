@@ -19,13 +19,15 @@ class CreateAsistenciasTable extends Migration
             $table->unsignedBigInteger('alumno_id');
             $table->foreign('alumno_id')->references('id')->on('alumnos');
 
-            $table->datetime('hora_ingreso');
-            $table->datetime('hora_egreso');
+            $table->datetime('hora_ingreso')->nullable();
+            $table->datetime('hora_egreso')->nullable();
             $table->enum('estado', ['0','1']);  //0=>afuera, 1=>adentro
             $table->string('comentario')->nullable();
 
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('ingreso_user_id')->nullable();
+            $table->foreign('ingreso_user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('egreso_user_id')->nullable();
+            $table->foreign('egreso_user_id')->references('id')->on('users');
 
             $table->timestamps();
         });
