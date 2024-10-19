@@ -92,6 +92,7 @@ class RegisterController extends Controller
         
         //asigno permisos al rol Admin
         $rolAdmin->givePermissionTo([
+            'Permisos_index',
             'Salas_index','Salas_create','Salas_edit','Salas_destroy',
             'Planes_index','Planes_create','Planes_edit','Planes_destroy',
             'Alumnos_index','Alumnos_create','Alumnos_edit','Alumnos_destroy', 

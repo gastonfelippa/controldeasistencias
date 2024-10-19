@@ -4,6 +4,7 @@
 <div class="content">
     <h1 class="ml-2">Ingreso de Alumnos</h1>   
     <video id="preview" style="display: none;" width="30%"></video>    
+    @include('common.messages') 
     @if($message = Session::get('mensaje'))
         <script>
             Swal.fire({
@@ -20,7 +21,7 @@
             <div class="card-header">
                 <div class="row">                
                     <div class="col-md-8 col-sm-12 mb-2">
-                        <form action="{{ route('asistencia.ingresoSearch')}}" method="get">
+                        <form action="{{ route('asistencia.ingreso')}}" method="get">
                         @csrf
                             <div class="input-group">
                                 <input class="form-control" type="text" id="search" name="search" placeholder="Ingrese el Alumno a Buscar...">

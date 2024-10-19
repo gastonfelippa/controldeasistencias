@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('estado');
             $table->string('fecha_ingreso');
    
+            $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
         });

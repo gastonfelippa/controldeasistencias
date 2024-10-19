@@ -29,6 +29,7 @@
                             <th>Sala</th>
                             <th>Plan</th>
                             <th>Estado</th>
+                            <th>Foto</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -42,6 +43,14 @@
                                 @if ($i->estado == '1') <span class="badge badge-pill badge-success">Activo</span>
                                 @else <span class="badge badge-pill badge-danger">Inactivo</span>
                                 @endif
+                            </td>
+                            <td class="text-center">
+                                @if ($i->foto == '')
+                                    @if ($i->genero == '1') <img class="rounded-circle" src="{{ asset('images/avatar-nena.jpg')}}" height="30px" alt="">                            
+                                    @else <img class="rounded-circle" src="{{ asset('images/avatar-nene.jpg')}}" height="30px" alt="">
+                                    @endif    
+                                @else <img class="rounded-circle" src="{{ route('alumno.imagen', $i->foto) }}" height="30px">
+                                @endif 
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group" aria-label="Basic example">

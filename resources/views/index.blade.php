@@ -1,6 +1,7 @@
 @extends('layouts.template')
 
 @section('content')
+@can('Permisos_index')
 <div class="content ml-2">
     <div class="row">
         <div class="col-lg-3 col-6">        
@@ -47,4 +48,5 @@
         </div>
     </div>   
 </div> 
+@endcan
 @endsection

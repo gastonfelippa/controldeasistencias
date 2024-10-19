@@ -8,6 +8,9 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+use App\Mail\WelcomeUser;
+use Illuminate\Support\Facades\Mail;
+
 class UserController extends Controller
 {
     public function __construct()
@@ -32,12 +35,13 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $nombre = strtolower($request->name);
-        $cadena = User::select('nombre_institucion')->first();
+        $cadena = User::select('name', 'nombre_institucion')->first();
+        $nombre_comercio = $cadena->nombre_institucion;
+        $nombre_admin = $cadena->name;
+        $password = $request->password;
+
         $cadena = strtolower($cadena->nombre_institucion);
         $username = str_replace(' ', '',Str::finish($nombre,'@'. $cadena));
-
-
-
 
         $request->validate([
             'name'  => 'required',
@@ -54,14 +58,7 @@ class UserController extends Controller
             'estado' => '1'
         ])->assignRole('docente');
 
-        // $usuario = new User();
-        // $usuario->name = ucwords($request->name);
-        // $usuario->email = strtolower($request->email);
-        // $usuario->password = Hash::make($request->password);
-        // $usuario->username = $username;
-        // $usuario->fecha_ingreso = Carbon::now();
-        // $usuario->estado = '1';
-        // $usuario->save()->assignRole('docente');
+        $this->sendEmail($user, $nombre_comercio, $nombre_admin, $password);
 
         return redirect()->route('usuarios.index')->with('mensaje_ok', 'El Usuario se grabó exitosamente!!');
     }
@@ -99,5 +96,16 @@ class UserController extends Controller
         dd($usuario->id);
         User::destroy($usuario->id);
         return redirect()->route('usuarios.index')->with('mensaje_ok', 'El Usuario se eliminó exitosamente!!');
+    }
+
+    public function sendEmail($user, $comercio, $admin, $password)
+    {
+        // $objDemo = new \stdClass();
+        // $objDemo->demo_one = $user->username;
+        // $objDemo->demo_two = $password;
+        // $objDemo->sender = 'El equipo de FlokI';
+        // $objDemo->receiver = $user->name;
+ 
+        Mail::to($user->email)->send(new WelcomeUser($user, $comercio, $admin, $password));
     }
 }

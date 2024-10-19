@@ -24,9 +24,10 @@ use App\Http\Controllers\AsistenciaController;
 //Route::get('/', function () { return view('index'); })->middleware('auth');
 
 Auth::routes(['register' => true]);
+Auth::routes(['verify' => true]);
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/', [App\Http\Controllers\AdminController::class, 'index'])->middleware('auth');
+Route::get('/', [App\Http\Controllers\AdminController::class, 'index'])->middleware(['auth', 'verified']);
 //Route::get('/asistencias/reportes', [App\Http\Controllers\AlumnoController::class, 'reporte2'])->middleware('auth');
 
 Route::resource('/salas', SalaController::class);
