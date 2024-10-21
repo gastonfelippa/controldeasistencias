@@ -1,7 +1,7 @@
 <!-- mensaje que se envía al empleado agregado -->
 @component('mail::message')   
 {{-- <x-mail::message>    --}}
-# Hola {{$user->name}}!!<br>
+# Hola {{strtok($user->name, ' ')}}!!<br>
 # {{$comercio}} te da la bienvenida a su equipo de trabajo!
 
 Estas son tus credenciales para que puedas ingresar al sistema:<br><br>

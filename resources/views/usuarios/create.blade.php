@@ -21,8 +21,21 @@
                             <div class="row mb-3">
                                 <label for="name" class="col-md-4 col-form-label text-md-end">Nombre</label>            
                                 <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control text-capitalize @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="off" autofocus>            
+                                    <input id="name" type="text" class="form-control text-capitalize @error('name') is-invalid @enderror" 
+                                        name="name" value="{{ old('name') }}" required autocomplete="off" autofocus>            
                                     @error('name')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>            
+                            <div class="row mb-3">
+                                <label for="apellido" class="col-md-4 col-form-label text-md-end">Apellido</label>            
+                                <div class="col-md-6">
+                                    <input id="apellido" type="text" class="form-control text-capitalize @error('apellido') is-invalid @enderror" 
+                                        name="apellido" value="{{ old('apellido') }}" required autocomplete="off" autofocus>            
+                                    @error('apellido')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -32,7 +45,8 @@
                             <div class="row mb-3">
                                 <label for="email" class="col-md-4 col-form-label text-md-end">Email</label>            
                                 <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control text-lowercase @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="off">            
+                                    <input id="email" type="email" class="form-control text-lowercase @error('email') is-invalid @enderror" 
+                                        name="email" value="{{ old('email') }}" required autocomplete="off">            
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -40,23 +54,25 @@
                                     @enderror
                                 </div>
                             </div>            
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <label for="password" class="col-md-4 col-form-label text-md-end">Contraseña</label>            
                                 <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="off">            
+                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" 
+                                        name="password" required autocomplete="off">            
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
                                 </div>
-                            </div>            
-                            <div class="row mb-3">
+                            </div>             --}}
+                            {{-- <div class="row mb-3">
                                 <label for="password-confirm" class="col-md-4 col-form-label text-md-end">Confirmar contraseña</label>            
                                 <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="off">
+                                    <input id="password-confirm" type="password" class="form-control" 
+                                        name="password_confirmation" required autocomplete="off">
                                 </div>
-                            </div>   
+                            </div>    --}}
                         </div>
                     </div>
                     <hr>

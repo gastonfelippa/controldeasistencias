@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use Carbon\Carbon;
-use App\Models\User;
 use Illuminate\Support\Str;
+
+use App\Models\User;
 use App\Models\ModelHasRole;
+
+use App\Models\Admin\Cliente;
+
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Providers\RouteServiceProvider;
@@ -60,8 +63,8 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
             'nombre_institucion' => ['required','unique:users'],
+            'genero' => ['not_in:0'],
         ]);
     }
 
@@ -74,18 +77,18 @@ class RegisterController extends Controller
     
     protected function create(array $data)
     {
-        
-        DB::begintransaction();
+        DB::beginTransaction();
+        DB::connection('admin')->beginTransaction();
         try{
             Role::create(['name' => 'admin', 'alias' => 'Administrador']);        
             Role::create(['name' => 'secretaria', 'alias' => 'Secretario/a']);
             Role::create(['name' => 'docente', 'alias' => 'Docente']);
-
+            
             //lista de permisos        
             Permission::create(['name' => 'Auditorias_index', 'alias' => 'Ver Auditorías']);
             Permission::create(['name' => 'Empresa_index', 'alias' => 'Ver Empresa']);
             Permission::create(['name' => 'Permisos_index', 'alias' => 'Ver Permisos']);
-
+       
             Permission::create(['name' => 'Salas_index', 'alias' => 'Ver']);
             Permission::create(['name' => 'Salas_create', 'alias' => 'Agregar']);
             Permission::create(['name' => 'Salas_edit', 'alias' => 'Modificar']);
@@ -116,23 +119,31 @@ class RegisterController extends Controller
             Permission::create(['name' => 'Reportes_asistencias', 'alias' => 'Ver']);
 
             $cadena = strtolower($data['nombre_institucion']);
+            $cadena = utf8_decode($cadena);
+            $cadena = strtr($cadena, utf8_decode('áéíóúÁÉÍÓÚñÑ'), 'aeiouAEIOUnN');
+            $cadena = utf8_encode($cadena);
             $username = str_replace(' ', '',Str::finish('admin@', $cadena));
 
+            //$password = Hash::make($data['password']);
+            $password = Hash::make('12345678');
+            //$password = '12345678';
+ 
             //creo al usuario registrado y le asigno el rol Admin
             $user = User::create([
                 'name' => ucwords($data['name']),
+                'apellido' => ucwords($data['apellido']),
                 'email' => strtolower($data['email']),
-                'password' => Hash::make($data['password']),
+                'password' => $password,
                 'username' => $username,
                 'nombre_institucion' => $data['nombre_institucion'],
                 'fecha_ingreso' => Carbon::now(),
                 'estado' => '1'
-                ])->assignRole('admin');
-
-            $rolAdmin = Role::find(1);
-            $rolSecretaria = Role::find(2);
-            $rolDocente = Role::find(3);
-            
+            ])->assignRole('admin');
+        
+            $rolAdmin = Role::where('name', 'admin')->first();
+            $rolSecretaria = Role::where('name', 'secretaria')->first();
+            $rolDocente = Role::where('name', 'docente')->first();
+              
             //asigno permisos al rol Admin
             $rolAdmin->givePermissionTo([
                 'Permisos_index',
@@ -156,11 +167,22 @@ class RegisterController extends Controller
             $rolDocente->givePermissionTo([
                 'Asistencias_ingreso','Asistencias_egreso',
             ]); 
-            
-            DB::commit(); 
+         
+            //CREO AL CLIENTE EN BD FLOKI_ADMIN
+            $cliente = Cliente::create([
+                'user_id'  => $user->id,
+                'nombre'   => ucwords($data['name']) . ' ' . ucwords($data['apellido']),
+                'email'    => strtolower($data['email']),
+                'comercio' => $data['nombre_institucion'],
+                'genero'   => $data['genero'],
+            ]);
+           
+            DB::commit();
+            DB::connection('admin')->commit(); 
                           
         }catch (\Exception $e){
             DB::rollback();
+            DB::connection('admin')->rollback();
             return 'no se grabó';
         } 
         return $user;

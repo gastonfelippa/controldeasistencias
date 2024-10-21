@@ -34,25 +34,29 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $nombre = strtolower($request->name);
+        $nombre = strtolower(strtok($request->name, ' '));  //'strtok' toma solo el primer nombre
         $cadena = User::select('name', 'nombre_institucion')->first();
         $nombre_comercio = $cadena->nombre_institucion;
         $nombre_admin = $cadena->name;
-        $password = $request->password;
+        $password = '12345678';
 
         $cadena = strtolower($cadena->nombre_institucion);
-        $username = str_replace(' ', '',Str::finish($nombre,'@'. $cadena));
+        $username = str_replace(' ', '',Str::finish($nombre,'@'. $cadena)); //'str_replace' quita los espacios 
+        $username = utf8_decode($username);
+        $username = strtr($username, utf8_decode('áéíóúÁÉÍÓÚñÑ'), 'aeiouAEIOUnN');
+        $username = utf8_encode($username);
 
         $request->validate([
             'name'  => 'required',
             'email'  => ['required', 'email', 'max:255','unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed']
+            // 'password' => ['required', 'string', 'min:8', 'confirmed']
         ]);
 
         $user = User::create([
             'name' => ucwords($request->name),
+            'apellido' => ucwords($request->apellido),
             'email' => strtolower($request->email),
-            'password' => Hash::make($request->password),
+            'password' => $password,
             'username' => $username,
             'fecha_ingreso' => Carbon::now(),
             'estado' => '1'
@@ -79,11 +83,13 @@ class UserController extends Controller
     {
         $request->validate([
             'name'  => 'required',
+            'apellido'  => 'required',
             'email'  => 'required', 'email', 'max:255'
         ]);
 
         $usuario = User::find($usuario->id);
         $usuario->name = ucwords($request->name);
+        $usuario->apellido = ucwords($request->apellido);
         $usuario->email = $request->email;
         $usuario->estado = '1';
         $usuario->save();
@@ -99,13 +105,7 @@ class UserController extends Controller
     }
 
     public function sendEmail($user, $comercio, $admin, $password)
-    {
-        // $objDemo = new \stdClass();
-        // $objDemo->demo_one = $user->username;
-        // $objDemo->demo_two = $password;
-        // $objDemo->sender = 'El equipo de FlokI';
-        // $objDemo->receiver = $user->name;
- 
+    { 
         Mail::to($user->email)->send(new WelcomeUser($user, $comercio, $admin, $password));
     }
 }

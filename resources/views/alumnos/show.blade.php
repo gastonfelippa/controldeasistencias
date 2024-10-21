@@ -81,8 +81,8 @@
                             <label for="">Fotografía</label>
                             <center>                            
                                 @if ($alumno->foto == '')
-                                    @if ($alumno->genero == '1') <img class="rounded-circle" src="{{ asset('images/avatar-niña.jpg')}}" width="150px" alt="">                            
-                                    @else <img class="rounded-circle" src="{{ asset('images/avatar-niño.jpg')}}" width="150px" alt="">
+                                    @if ($alumno->genero == '1') <img class="rounded-circle" src="{{ asset('images/avatar-nena.jpg')}}" width="150px" alt="">                            
+                                    @else <img class="rounded-circle" src="{{ asset('images/avatar-nene.jpg')}}" width="150px" alt="">
                                     @endif    
                                 @else <img class="rounded-circle" src="{{ route('alumno.imagen', $alumno->foto) }}" width="150px">
                                 @endif 
@@ -92,6 +92,10 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="">Código QR</label>
+                            <a href="{{route('pdf.qr.alumno', $alumno->id)}}" target="_blank"
+                                class="btn btn-danger ml-5 mb-2" title="Imprimir">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" color="white" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></svg>
+                            </a> 
                             <center> 
                                 <div>
                                     {{-- {{ QrCode::size(150)->generate('www.nigmacode.com') }} --}}

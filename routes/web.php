@@ -57,6 +57,7 @@ Route::get('/asistencia/egresoSearch', [AsistenciaController::class, 'egresoSear
 Route::get('/asistencia/egreso', [AsistenciaController::class, 'egreso'])->name('asistencia.egreso');
 Route::post('/asistencia/accion', [AsistenciaController::class, 'accion'])->name('asistencia.accion');
 
+Route::get('/pdfqralumno/{alumnoId}', [PdfController::class, 'pdfQrAlumno'])->name('pdf.qr.alumno');
 Route::get('/pdfqrall', [PdfController::class, 'pdfQrAll'])->name('pdf.qr.all');
 
 
